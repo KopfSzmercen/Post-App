@@ -1,0 +1,23 @@
+{
+  "name": "post-app",
+  "version": "1.0.0",
+  "description": "## A small full-stack app that allows creating posts and showing them to friends.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node ./backend/dist/index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/KopfSzmercen/Post-App.git"
+  },
+  "author": "Albert Szymanski",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/KopfSzmercen/Post-App/issues"
+  },
+  "homepage": "https://github.com/KopfSzmercen/Post-App#readme",
+  "engines": {
+    "node": "14.x"
+  }
+}
