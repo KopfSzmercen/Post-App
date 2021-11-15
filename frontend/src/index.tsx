@@ -15,7 +15,7 @@ import customTheme from "./config/customTheme";
 import { store } from "./store/store";
 import { Provider } from "react-redux";
 
-export const BASE_API_URL = "http://localhost:8080";
+export const BASE_API_URL = "https://glacial-wave-95692.herokuapp.com";
 
 ReactDOM.render(
   <Provider store={store}>
