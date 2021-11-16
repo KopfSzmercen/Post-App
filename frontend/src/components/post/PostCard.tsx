@@ -62,8 +62,8 @@ const PostCard: React.FC<{
     setLikesNumber(result.newLikesNumber!);
   };
   return (
-    <Grid item xs={12} md={4} justifyContent="center">
-      <Card sx={{ maxWidth: 300 }} key={props.postId}>
+    <Grid item xs={12} md={4} xl={3} justifyContent="center">
+      <Card sx={{ maxWidth: 300, margin: "auto" }} key={props.postId}>
         <CardHeader
           avatar={
             <Avatar sx={{ bgcolor: purple[500] }} aria-label="user">
