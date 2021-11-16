@@ -1,26 +1,23 @@
-import { Favorite } from "@mui/icons-material";
-import {
-  Avatar,
-  Button,
-  Card,
-  CardActions,
-  CardContent,
-  CardHeader,
-  Grid,
-  IconButton,
-  Typography,
-  Box
-} from "@mui/material";
-import { purple } from "@mui/material/colors";
-import React from "react";
-import { useSelector } from "react-redux";
-import { RootState } from "../../store/store";
-import handleLikePost from "./handleLikePost";
-import { useState } from "react";
-import { red, grey } from "@mui/material/colors";
+import React, { useState } from "react";
 import { useHistory } from "react-router-dom";
+import handleLikePost from "./handleLikePost";
+import {
+  Card,
+  CardHeader,
+  Avatar,
+  Typography,
+  CardContent,
+  Box,
+  CardActions,
+  IconButton,
+  Container,
+  Button
+} from "@mui/material";
+import { Favorite } from "@mui/icons-material";
+import { purple, grey, red } from "@mui/material/colors";
+import MyDrawer from "../drawer/MyDrawer";
 
-const PostCard: React.FC<{
+const BigPostCard: React.FC<{
   title: string;
   description: string;
   creatorName: string;
@@ -28,24 +25,18 @@ const PostCard: React.FC<{
   createdAt: Date;
   isLiked: boolean;
   postId: string;
-  expand: (postData: any) => void;
+  authToken: string;
+  expand: (arg: any) => void;
 }> = (props) => {
-  const descriptionIsLong = props.description.length >= 30;
   const [action, setAction] = useState(!props.isLiked ? "LIKE" : "DISLIKE");
   const [likesNumber, setLikesNumber] = useState(props.likes);
   const [isSending, setIsSending] = useState(false);
   const history = useHistory();
 
-  const authToken =
-    useSelector((state: RootState) => state.auth.authToken) || "";
-  const readMore = () => {
-    props.expand({ ...props, _id: props.postId });
-  };
-
   const toggleLike = async () => {
     if (isSending) return;
     setIsSending(true);
-    const result = await handleLikePost(props.postId, action, authToken!);
+    const result = await handleLikePost(props.postId, action, props.authToken!);
     setIsSending(false);
     if (!result.success) {
       if (result.error) {
@@ -56,14 +47,19 @@ const PostCard: React.FC<{
       }
       return;
     }
-
     const newAction = action === "LIKE" ? "DISLIKE" : "LIKE";
     setAction(newAction);
     setLikesNumber(result.newLikesNumber!);
   };
+
+  const closeExpand = () => {
+    props.expand(null);
+  };
+
   return (
-    <Grid item xs={12} md={4} justifyContent="center">
-      <Card sx={{ maxWidth: 300 }} key={props.postId}>
+    <Container>
+      <MyDrawer />
+      <Card sx={{ maxWidth: 400, margin: "70px auto" }} key={props.postId}>
         <CardHeader
           avatar={
             <Avatar sx={{ bgcolor: purple[500] }} aria-label="user">
@@ -76,11 +72,7 @@ const PostCard: React.FC<{
           } \n ${props.createdAt.toLocaleDateString()}`}
         ></CardHeader>
         <CardContent>
-          <Typography variant="body2">
-            {!descriptionIsLong
-              ? props.description
-              : props.description.substring(0, 30) + "..."}
-          </Typography>
+          <Typography variant="body2">{props.description}</Typography>
         </CardContent>
         <CardActions>
           <Box sx={{ display: "flex" }}>
@@ -93,11 +85,21 @@ const PostCard: React.FC<{
               <Typography>{likesNumber}</Typography>
             </IconButton>
           </Box>
-          {descriptionIsLong && <Button onClick={readMore}>Read more</Button>}
         </CardActions>
       </Card>
-    </Grid>
+
+      <Box sx={{ margin: "auto", textAlign: "center" }}>
+        <Button
+          variant="contained"
+          color="purple"
+          size="large"
+          onClick={closeExpand}
+        >
+          Go back
+        </Button>
+      </Box>
+    </Container>
   );
 };
 
-export default PostCard;
+export default BigPostCard;

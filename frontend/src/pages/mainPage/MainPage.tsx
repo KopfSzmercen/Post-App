@@ -9,11 +9,13 @@ import { CircularProgress, Container, Grid, Typography } from "@mui/material";
 import PostCard from "../../components/post/PostCard";
 import { grey } from "@mui/material/colors";
 import MyDrawer from "../../components/drawer/MyDrawer";
+import BigPostCard from "../../components/post/BigPostCard";
 
 const MainPage = () => {
   const history = useHistory();
   const [posts, setPosts] = useState<post[] | []>([]);
   const [isRequesting, setIsRequesting] = useState(false);
+  const [isExpanded, setIsExpanded] = useState<null | post>(null);
 
   const { authToken, isLoggedIn, userId } = useAppSelector(
     (state: RootState) => {
@@ -51,6 +53,27 @@ const MainPage = () => {
     }
   }, [getUserPosts, isLoggedIn, authToken, history]);
 
+  if (isExpanded) {
+    const foundPost = posts.find((post) => isExpanded._id === post._id);
+
+    if (foundPost) {
+      return (
+        <BigPostCard
+          title={foundPost.title}
+          description={foundPost.description}
+          creatorName={foundPost.creatorName}
+          likes={foundPost.likes.length}
+          isLiked={foundPost.likes.includes(userId!) ? true : false}
+          createdAt={new Date(foundPost.createdAt)}
+          key={foundPost._id}
+          postId={foundPost._id}
+          authToken={authToken!}
+          expand={setIsExpanded}
+        />
+      );
+    }
+  }
+
   return (
     <>
       <MyDrawer />
@@ -83,6 +106,7 @@ const MainPage = () => {
                   createdAt={new Date(post.createdAt)}
                   key={post._id}
                   postId={post._id}
+                  expand={setIsExpanded}
                 />
               );
             })}
